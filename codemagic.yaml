@@ -1,3 +1,47 @@
-git add codemagic.yaml
-git commit -m 'Add first workflow'
-git push
+workflows:
+  flowbank_web:
+    name: FlowBank Web (HTML banking demo)
+    max_build_duration: 10
+    instance_type: linux_x2    # Faster Linux machine is enough for static HTML
+
+    environment:
+      vars:
+        WEB_ENTRY_FILE: "index.html"
+
+    scripts:
+      - name: Check project structure
+        script: |
+          echo "Current directory: $(pwd)"
+          echo "Listing files:"
+          ls -R
+
+          if [ ! -f "$WEB_ENTRY_FILE" ]; then
+            echo "ERROR: $WEB_ENTRY_FILE not found at repo root."
+            exit 1
+          fi
+
+      - name: Prepare web build output
+        script: |
+          mkdir -p build
+          # Copy your FlowBank HTML app into build/ so it's clean and ready to host
+          cp "$WEB_ENTRY_FILE" build/index.html
+
+          # If you later add icons, manifest, etc. you can copy them too, for example:
+          # cp -R icons build/icons
+          # cp manifest.json build/manifest.json
+
+          echo "Contents of build/:"
+          ls -R build
+
+    artifacts:
+      # This will give you a downloadable artifact that contains your exact FlowBank web app
+      - build/**
+      - index.html
+
+    publishing:
+      email:
+        recipients:
+          - "you@example.com"   # change this to your address if you want build emails
+        notify:
+          success: true
+          failure: true
