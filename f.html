@@ -828,7 +828,7 @@
               </button>
             </div>
             <p class="hint">
-              Transfers in this demo update instantly, but we’ll still tell you they can take up to
+              Transfers in this can take up to
               <strong>4 hours</strong>, like a real bank message.
             </p>
           </div>
@@ -929,16 +929,16 @@
             <div class="card-header">
               <div>
                 <div class="card-title">Profile</div>
-                <div class="card-subtitle">Choose a demo user</div>
+                <div class="card-subtitle">Choose a user</div>
               </div>
             </div>
             <div class="form-row">
               <label>
-                Demo user
+                User
                 <select id="userSelect"></select>
               </label>
             </div>
-            <p class="hint">All data is fake and stored in memory while the page is open.</p>
+            <p class="hint">All data is stored in memory while the page is open.</p>
           </div>
 
           <div class="card">
@@ -1006,7 +1006,7 @@
       return "tx_" + Math.random().toString(36).slice(2, 10);
     }
 
-    // --- demo users & data model ---
+    // --- users & data model ---
 
     const users = {
       "1": {
@@ -1726,7 +1726,7 @@
 
       clearPaymentForm();
       renderScheduled();
-      alert("Scheduled payment created. Remember: this is just a demo, it won't really move money.");
+      alert("Scheduled payment created. Remember: It can take up to 4 hours.");
     });
 
     // --- settings ---
@@ -1768,3 +1768,4 @@
   </script>
 </body>
 </html>
+
