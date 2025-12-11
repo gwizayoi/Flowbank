@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MetroBank</title>
+  <title>MetroBank • Business Banking Demo</title>
 
   <!-- Viewport optimised for iPhone (incl. 16 Pro Max) -->
   <meta
@@ -10,661 +10,759 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
   />
 
-  <!-- iOS "app" behaviour when added to Home Screen (hides Safari UI) -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="MetroBank" />
-  <meta name="theme-color" content="#020617" />
-
-  <!-- Optional icons (use relative paths so they work on GitHub Pages and median.co) -->
-  <!--
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/flowbank-180.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/flowbank-32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="icons/flowbank-16.png" />
-  <link rel="manifest" href="manifest.json" />
-  -->
-
   <style>
-    :root {
-      --bg: #020617;
-      --bg-card: #0b1120;
-      --accent: #fb7185;
-      --accent-soft: rgba(248, 113, 113, 0.18);
-      --accent-strong: #fb7185;
-      --accent-blue: #38bdf8;
-      --danger: #ef4444;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --border: #1f2937;
-      --radius-xl: 26px;
-      --radius-lg: 18px;
-      --radius-md: 12px;
-      --radius-pill: 999px;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
-      --transition: 0.18s ease-out;
-    }
+  :root {
+    /* Palette */
+    --bg: #020617;
+    --bg-elevated: #020617;
+    --bg-card: rgba(15, 23, 42, 0.96);
+    --bg-soft: rgba(15, 23, 42, 0.85);
+    --accent: #4f46e5;
+    --accent-strong: #6366f1;
+    --accent-soft: rgba(99, 102, 241, 0.16);
+    --accent-blue: #22d3ee;
+    --accent-danger: #ef4444;
+    --accent-danger-soft: rgba(239, 68, 68, 0.16);
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    --text: #f9fafb;
+    --muted: #9ca3af;
+    --border-subtle: rgba(148, 163, 184, 0.35);
+    --border-strong: rgba(148, 163, 184, 0.6);
 
-    html,
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --radius-pill: 999px;
+
+    --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.9);
+    --shadow-floating: 0 18px 45px rgba(15, 23, 42, 0.9);
+
+    --transition-fast: 0.16s ease-out;
+    --transition-med: 0.22s ease-out;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+      "Segoe UI", sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    background:
+      radial-gradient(circle at top, #0b1120, #020617 55%, #000 100%);
+    color: var(--text);
+    padding: 0;
+    overscroll-behavior-y: none;
+  }
+
+  /* Respect iPhone safe areas */
+  @supports (padding: max(0px)) {
     body {
-      height: 100%;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
+  }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-      background: radial-gradient(circle at top, #0f172a, #020617 54%, #000 100%);
-      color: var(--text);
-      padding: 0;
-      overscroll-behavior-y: none;
-    }
+  .app {
+    width: 100%;
+    max-width: 430px; /* iPhone 16 Pro Max logical width */
+    height: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    background:
+      radial-gradient(circle at top left, rgba(79, 70, 229, 0.4), transparent 60%),
+      radial-gradient(circle at top right, rgba(34, 211, 238, 0.35), transparent 60%),
+      var(--bg-elevated);
+    border-radius: 32px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
 
-    /* Respect iPhone safe areas (notch / home bar) */
-    @supports (padding: max(0px)) {
-      body {
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-      }
-    }
+  .glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at -10% -20%, rgba(99, 102, 241, 0.4), transparent 60%),
+      radial-gradient(circle at 110% -10%, rgba(34, 211, 238, 0.25), transparent 55%);
+    mix-blend-mode: screen;
+    opacity: 0.9;
+    pointer-events: none;
+  }
 
-    .app {
-      width: 100%;
-      max-width: 430px;          /* iPhone 16 Pro Max CSS width */
-      height: 100%;
-      max-height: 100%;
-      margin: 0 auto;
-      background: radial-gradient(circle at top left, #020617, #000 65%);
-      border-radius: 32px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+  .app-inner {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 14px 0;
+    backdrop-filter: blur(22px);
+    z-index: 1;
+  }
 
-    .glow {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at -10% -20%, rgba(248, 113, 113, 0.3), transparent 60%),
-        radial-gradient(circle at 110% -10%, rgba(56, 189, 248, 0.22), transparent 55%);
-      opacity: 0.9;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
+  @supports (padding: max(0px)) {
     .app-inner {
-      position: relative;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 12px 12px 0;
-      backdrop-filter: blur(22px);
-      z-index: 1;
+      padding-bottom: 0;
     }
+  }
 
-    @supports (padding: max(0px)) {
-      .app-inner {
-        padding-bottom: 0;
-      }
+  /* HEADER */
+
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 16px;
+    background:
+      conic-gradient(from 180deg,
+        #6366f1,
+        #22d3ee,
+        #a855f7,
+        #6366f1);
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(248, 250, 252, 0.5);
+  }
+
+  .brand-main {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .brand-sub {
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+
+  .user-pill {
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(15, 23, 42, 0.98)
+    );
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    max-width: 170px;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.9);
+  }
+
+  .user-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #22c55e;
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.32);
+  }
+
+  .user-pill span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* MAIN SCROLL AREA */
+
+  .app-main {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 10px;
+    scrollbar-gutter: stable;
+  }
+
+  .screen {
+    display: none;
+    margin-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .screen.active {
+    display: block;
+  }
+
+  /* CARDS */
+
+  .card {
+    background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.9)
+      );
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    padding: 14px 14px 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(18px);
+  }
+
+  .card--hero {
+    background:
+      radial-gradient(circle at 0 0, rgba(99, 102, 241, 0.5), transparent 60%),
+      radial-gradient(circle at 100% 0, rgba(34, 211, 238, 0.4), transparent 55%),
+      linear-gradient(145deg, #020617, #020617);
+    border-color: rgba(248, 250, 252, 0.24);
+    box-shadow: 0 26px 60px rgba(15, 23, 42, 0.98);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card--hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 120% 120%,
+      rgba(15, 23, 42, 0.85),
+      transparent 65%
+    );
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .card--hero > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .card-subtitle {
+    font-size: 0.86rem;
+    color: rgba(226, 232, 240, 0.95);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .pill {
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    background: radial-gradient(
+      circle at 0 0,
+      rgba(148, 163, 184, 0.28),
+      transparent 60%
+    );
+  }
+
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 1);
+  }
+
+  .balance-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+
+  .balance-main {
+    font-size: 2.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .balance-main span:first-child {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .balance-main span:nth-child(2) {
+    font-size: 1.4rem;
+    letter-spacing: 0.03em;
+  }
+
+  .balance-meta {
+    margin-top: 4px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 8px 0 4px;
+  }
+
+  .chip {
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 0.72rem;
+    background: rgba(15, 23, 42, 0.94);
+    border: 1px solid rgba(55, 65, 81, 0.9);
+    color: rgba(209, 213, 219, 0.96);
+  }
+
+  .chip--soft {
+    background: var(--accent-soft);
+    border-color: rgba(129, 140, 248, 0.9);
+    color: #e0e7ff;
+  }
+
+  /* BUTTONS */
+
+  .btn {
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-strong);
+    padding: 9px 10px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    background: var(--bg-soft);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      opacity var(--transition-fast),
+      filter var(--transition-fast);
+    touch-action: manipulation;
+    min-height: 40px;
+  }
+
+  .btn--primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    border-color: rgba(191, 219, 254, 0.95);
+    box-shadow: 0 14px 32px rgba(79, 70, 229, 0.7);
+  }
+
+  .btn--ghost {
+    border-style: dashed;
+    border-color: rgba(148, 163, 184, 0.9);
+    background: rgba(15, 23, 42, 0.92);
+  }
+
+  .btn--danger {
+    background: linear-gradient(135deg, #b91c1c, #ef4444);
+    border-color: rgba(254, 202, 202, 0.95);
+    box-shadow: 0 12px 32px rgba(239, 68, 68, 0.6);
+  }
+
+  .btn:active {
+    transform: translateY(1px) scale(0.985);
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.95);
+    opacity: 0.97;
+    filter: brightness(0.97);
+  }
+
+  .btn-icon {
+    font-size: 1rem;
+  }
+
+  .btn-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .btn-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  /* FORMS */
+
+  .form-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  label {
+    font-size: 0.74rem;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 4px;
+  }
+
+  input,
+  select {
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(75, 85, 99, 0.95);
+    padding: 9px 10px;
+    font: inherit;
+    font-size: 0.84rem;
+    background: rgba(15, 23, 42, 0.96);
+    color: var(--text);
+    outline: none;
+    transition:
+      border-color 0.16s ease,
+      box-shadow 0.16s ease,
+      background 0.16s ease;
+  }
+
+  input::placeholder {
+    color: rgba(148, 163, 184, 0.7);
+  }
+
+  input:focus,
+  select:focus {
+    border-color: rgba(129, 140, 248, 0.95);
+    box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
+    background: rgba(15, 23, 42, 1);
+  }
+
+  /* TRANSACTION LIST */
+
+  .tx-list {
+    max-height: 240px;
+    overflow-y: auto;
+    margin-top: 4px;
+    padding-right: 4px;
+  }
+
+  .tx-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(31, 41, 55, 0.9);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .tx-item:last-child {
+    border-bottom: none;
+  }
+
+  .tx-item:hover {
+    background: rgba(15, 23, 42, 0.9);
+  }
+
+  .tx-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .tx-label {
+    font-weight: 500;
+  }
+
+  .tx-meta {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .tx-amount {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .tx-amount--pos {
+    color: #22c55e;
+  }
+
+  .tx-amount--neg {
+    color: #f97373;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 12px 0 4px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* POTS */
+
+  .pots-list {
+    display: grid;
+    gap: 8px;
+    margin-top: 4px;
+    max-height: 210px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .pot-card {
+    border-radius: 18px;
+    padding: 9px 10px;
+    background:
+      radial-gradient(circle at 0 0, rgba(34, 211, 238, 0.16), transparent 70%),
+      rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .pot-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    border-color: rgba(191, 219, 254, 0.9);
+  }
+
+  .pot-name {
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .pot-meta {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .pot-amount {
+    font-weight: 600;
+  }
+
+  /* INSIGHTS */
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-top: 6px;
+  }
+
+  .summary-label {
+    color: var(--muted);
+  }
+
+  .summary-val {
+    font-weight: 500;
+  }
+
+  .category-list {
+    margin-top: 8px;
+    max-height: 210px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .cat-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    padding: 4px 0;
+  }
+
+  /* SETTINGS SWITCHES */
+
+  .switch-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    margin-top: 10px;
+  }
+
+  .switch-label {
+    color: var(--muted);
+  }
+
+  .switch {
+    width: 46px;
+    height: 26px;
+    border-radius: 999px;
+    background: rgba(31, 41, 55, 1);
+    border: 1px solid rgba(75, 85, 99, 1);
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition:
+      background var(--transition-med),
+      border-color var(--transition-med);
+    touch-action: manipulation;
+  }
+
+  .switch-knob {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: #f9fafb;
+    transform: translateX(0);
+    transition: transform var(--transition-med), box-shadow var(--transition-med);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.75);
+  }
+
+  .switch.on {
+    background: #22c55e;
+    border-color: #bbf7d0;
+  }
+
+  .switch.on .switch-knob {
+    transform: translateX(18px);
+  }
+
+  .hint {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  /* TAB BAR */
+
+  .tabbar-wrapper {
+    padding: 0 10px 10px;
+    padding-top: 4px;
+  }
+
+  @supports (padding: max(0px)) {
+    .tabbar-wrapper {
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
     }
+  }
 
-    /* Header */
+  .tabbar {
+    height: 56px;
+    background: rgba(15, 23, 42, 0.98);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(55, 65, 81, 0.9);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    overflow: hidden;
+    box-shadow: var(--shadow-floating);
+    backdrop-filter: blur(20px);
+  }
 
-    .app-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      padding-bottom: 4px;
+  .tab-btn {
+    font-size: 0.72rem;
+    border: none;
+    background: none;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .tab-btn span {
+    font-size: 1.04rem;
+  }
+
+  .tab-btn.active {
+    color: #e0e7ff;
+    font-weight: 500;
+    background:
+      radial-gradient(circle at 50% 0, rgba(99, 102, 241, 0.4), transparent 65%);
+    transform: translateY(-1px);
+  }
+
+  /* MISC */
+
+  .hidden {
+    display: none !important;
+  }
+
+  .tx-list::-webkit-scrollbar,
+  .pots-list::-webkit-scrollbar,
+  .category-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .tx-list::-webkit-scrollbar-thumb,
+  .pots-list::-webkit-scrollbar-thumb,
+  .category-list::-webkit-scrollbar-thumb {
+    background: rgba(55, 65, 81, 0.9);
+    border-radius: 999px;
+  }
+
+  @media (max-width: 480px) {
+    .app-inner {
+      padding: 12px 10px 0;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #fb7185, #38bdf8);
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(248, 250, 252, 0.45);
-    }
-
-    .brand-main {
-      font-size: 0.98rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
-
-    .brand-sub {
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
-
-    .user-pill {
-      border-radius: var(--radius-pill);
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      padding: 5px 10px;
-      font-size: 0.78rem;
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
-      max-width: 170px;
-    }
-
-    .user-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.25);
-    }
-
-    .user-pill span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Main scroll area (everything above the tab bar) */
-
-    .app-main {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 10px;
-    }
-
-    .screen {
-      display: none;
-      margin-top: 4px;
-      padding-bottom: 4px;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    /* Cards */
 
     .card {
-      background: rgba(15, 23, 42, 0.96);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 12px 12px 10px;
+      padding: 12px 12px 9px;
       margin-bottom: 10px;
     }
 
-    .card--hero {
-      background:
-        radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.45), transparent 55%),
-        radial-gradient(circle at 100% 0, rgba(56, 189, 248, 0.35), transparent 60%),
-        linear-gradient(140deg, #020617, #020617);
-      border-color: rgba(248, 250, 252, 0.22);
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.95);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-
-    .card-title {
-      font-size: 0.8rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .card-subtitle {
-      font-size: 0.8rem;
-      color: rgba(226, 232, 240, 0.9);
-      margin-top: 3px;
-    }
-
-    .pill {
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      padding: 3px 9px;
-      font-size: 0.72rem;
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .pill-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 1);
-    }
-
-    .balance-label {
-      font-size: 0.76rem;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-
-    .balance-main {
-      font-size: 2rem;
-      font-weight: 600;
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-    }
-
-    .balance-main span {
-      font-size: 0.9rem;
-      color: rgba(226, 232, 240, 0.95);
-    }
-
-    .balance-meta {
-      margin-top: 4px;
-      font-size: 0.76rem;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .chip-row {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin: 4px 0;
-    }
-
-    .chip {
-      border-radius: 999px;
-      padding: 3px 8px;
-      font-size: 0.72rem;
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      color: rgba(209, 213, 219, 0.96);
-    }
-
-    .chip--soft {
-      background: var(--accent-soft);
-      border-color: rgba(248, 113, 113, 0.85);
-      color: #fee2e2;
-    }
-
-    /* Buttons */
-
-    .btn {
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      padding: 9px 10px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      background: rgba(15, 23, 42, 0.96);
-      color: var(--text);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      cursor: pointer;
-      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition), opacity var(--transition);
-      touch-action: manipulation;
-      min-height: 38px;
-    }
-
-    .btn--primary {
-      background: linear-gradient(135deg, var(--accent), #f97316);
-      border-color: rgba(252, 165, 165, 0.9);
-      box-shadow: 0 12px 32px rgba(248, 113, 113, 0.6);
-    }
-
-    .btn--ghost {
-      border-style: dashed;
-    }
-
-    .btn--danger {
-      background: linear-gradient(135deg, #b91c1c, #ef4444);
-      border-color: rgba(254, 202, 202, 0.9);
-      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.5);
-    }
-
-    .btn:active {
-      transform: translateY(1px) scale(0.99);
-      box-shadow: 0 7px 22px rgba(15, 23, 42, 0.9);
-      opacity: 0.97;
-    }
-
-    .btn-icon {
-      font-size: 1rem;
-    }
-
-    .btn-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .btn-row-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    /* Forms */
-
-    .form-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    label {
-      font-size: 0.74rem;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      gap: 3px;
-    }
-
-    input,
-    select {
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(75, 85, 99, 0.9);
-      padding: 8px 9px;
-      font: inherit;
-      font-size: 0.82rem;
-      background: rgba(15, 23, 42, 0.96);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    }
-
-    input::placeholder {
-      color: rgba(148, 163, 184, 0.7);
-    }
-
-    input:focus,
-    select:focus {
-      border-color: rgba(248, 113, 113, 0.95);
-      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.75);
-      background: rgba(15, 23, 42, 1);
-    }
-
-    /* Transaction list */
-
-    .tx-list {
-      max-height: 230px;
-      overflow-y: auto;
-      margin-top: 4px;
-      padding-right: 4px;
-    }
-
-    .tx-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 7px 0;
-      border-bottom: 1px dashed rgba(31, 41, 55, 0.9);
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .tx-item:last-child {
-      border-bottom: none;
-    }
-
-    .tx-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .tx-label {
-      font-weight: 500;
-    }
-
-    .tx-meta {
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
-
-    .tx-amount {
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .tx-amount--pos {
-      color: #22c55e;
-    }
-
-    .tx-amount--neg {
-      color: #f97373;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 12px 0 4px;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    /* Pots */
-
-    .pots-list {
-      display: grid;
-      gap: 8px;
-      margin-top: 4px;
-      max-height: 200px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .pot-card {
-      border-radius: 16px;
-      padding: 8px 9px;
-      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.16), transparent 70%),
-        rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .pot-name {
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-
-    .pot-meta {
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
-
-    .pot-amount {
-      font-weight: 600;
-    }
-
-    /* Insights */
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      margin-top: 6px;
-    }
-
-    .summary-label {
-      color: var(--muted);
-    }
-
-    .summary-val {
-      font-weight: 500;
-    }
-
-    .category-list {
-      margin-top: 8px;
-      max-height: 200px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .cat-item {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      padding: 4px 0;
-    }
-
-    /* Settings switches */
-
-    .switch-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.82rem;
-      margin-top: 8px;
-    }
-
-    .switch-label {
-      color: var(--muted);
-    }
-
-    .switch {
-      width: 42px;
-      height: 24px;
-      border-radius: 999px;
-      background: rgba(31, 41, 55, 1);
-      border: 1px solid rgba(75, 85, 99, 1);
-      padding: 2px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      transition: background var(--transition), border-color var(--transition);
-      touch-action: manipulation;
-    }
-
-    .switch-knob {
-      width: 20px;
-      height: 20px;
-      border-radius: 999px;
-      background: #f9fafb;
-      transform: translateX(0);
-      transition: transform var(--transition);
-    }
-
-    .switch.on {
-      background: #22c55e;
-      border-color: #bbf7d0;
-    }
-
-    .switch.on .switch-knob {
-      transform: translateX(16px);
-    }
-
-    .hint {
-      margin-top: 6px;
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
-
-    /* Tab bar – fixed inside the app, not the page */
     .tabbar-wrapper {
-      padding: 0 8px 8px;
-      padding-top: 2px;
+      padding-inline: 8px;
     }
-
-    @supports (padding: max(0px)) {
-      .tabbar-wrapper {
-        padding-bottom: max(8px, env(safe-area-inset-bottom));
-      }
-    }
-
-    .tabbar {
-      height: 52px;
-      background: rgba(15, 23, 42, 0.96);
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      overflow: hidden;
-    }
-
-    .tab-btn {
-      font-size: 0.7rem;
-      border: none;
-      background: none;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-
-    .tab-btn span {
-      font-size: 1.02rem;
-    }
-
-    .tab-btn.active {
-      color: #fee2e2;
-      font-weight: 500;
-      background: radial-gradient(circle at 50% 0, rgba(248, 113, 113, 0.35), transparent 60%);
-    }
-
-    /* Misc */
-
-    .hidden {
-      display: none !important;
-    }
-
-    .tx-list::-webkit-scrollbar,
-    .pots-list::-webkit-scrollbar,
-    .category-list::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .tx-list::-webkit-scrollbar-thumb,
-    .pots-list::-webkit-scrollbar-thumb,
-    .category-list::-webkit-scrollbar-thumb {
-      background: rgba(55, 65, 81, 0.9);
-      border-radius: 999px;
-    }
-
-    @media (max-width: 480px) {
-      .app-inner {
-        padding: 10px 8px 0;
-      }
-      .card {
-        padding: 10px 10px 8px;
-      }
-    }
+  }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="glow"></div>
+
     <div class="app-inner">
       <header class="app-header">
         <div class="brand">
@@ -676,71 +774,85 @@
         </div>
         <div class="user-pill">
           <div class="user-dot"></div>
-          <span id="userNamePill">Select user</span>
+          <span id="userNamePill">Alex Ventures Ltd</span>
         </div>
       </header>
 
-      <!-- Scrollable main area -->
       <main class="app-main">
         <!-- HOME -->
         <section class="screen active" id="screen-home">
           <div class="card card--hero">
             <div class="card-header">
               <div>
-                <div class="card-title">Main account</div>
-                <div class="card-subtitle" id="homeAccountName">Everyday</div>
+                <div class="card-title">Business current account</div>
+                <div class="card-subtitle" id="homeAccountName">
+                  MetroBank • Main account
+                </div>
               </div>
               <div class="pill">
                 <span class="pill-dot"></span>
-                <span id="homeIban">••••</span>
+                <span id="cardStatusChip">Card active</span>
               </div>
             </div>
-            <div>
-              <div class="balance-label">Available balance</div>
-              <div class="balance-main">
-                <span>£</span>
-                <span id="homeBalance">0.00</span>
-              </div>
-              <div class="balance-meta">
-                <span id="homeType">Current account</span>
-                <span id="homeUpdated">Updated just now</span>
-              </div>
-              <div class="chip-row" style="margin-top:7px;">
-                <span class="chip chip--soft" id="cardStatusChip">Card active</span>
-                <span class="chip">Instant notifications</span>
-              </div>
-              <div class="btn-row">
-                <button class="btn btn--primary" id="btnQuickDeposit"><span class="btn-icon">➕</span>Deposit</button>
-                <button class="btn btn--danger" id="btnQuickWithdraw"><span class="btn-icon">➖</span>Pay</button>
-                <button class="btn btn--ghost" id="btnQuickTransfer"><span class="btn-icon">🔁</span>Transfer</button>
-              </div>
+
+            <div class="balance-label">Available balance</div>
+            <div class="balance-main">
+              <span>£</span>
+              <span id="homeBalance">0.00</span>
+            </div>
+
+            <div class="balance-meta">
+              <span id="homeType">Sort code 04-00-75 • 12345678</span>
+              <span id="homeUpdated">Updated just now</span>
+            </div>
+
+            <div class="chip-row">
+              <div class="chip chip--soft" id="feedChip">Today’s feed</div>
+              <div class="chip">IBAN <span id="homeIban">GB12 MBNA 0400 7512 3456 78</span></div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn--primary" id="btnAddPayment">
+                <span class="btn-icon">📤</span>Pay
+              </button>
+              <button class="btn" id="btnAddIncome">
+                <span class="btn-icon">📥</span>Add money
+              </button>
+              <button class="btn" id="btnQuickPot">
+                <span class="btn-icon">💰</span>To pot
+              </button>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">Feed</div>
-                <div class="card-subtitle">Recent activity</div>
+                <div class="card-title">Activity</div>
+                <div class="card-subtitle">Recent transactions</div>
               </div>
-              <span class="chip" id="feedChip">0 transactions</span>
             </div>
-            <div class="tx-list" id="homeTxList"></div>
-            <div class="empty" id="homeTxEmpty">No activity yet. Make a transaction to see it here.</div>
+
+            <div id="homeTxEmpty" class="empty hidden">
+              No activity yet. Try making a payment or adding money.
+            </div>
+            <div id="homeTxList" class="tx-list"></div>
           </div>
 
-          <!-- Transaction details card -->
-          <div class="card hidden" id="txDetailCard">
+          <div class="card" id="txDetailCard">
             <div class="card-header">
               <div>
-                <div class="card-title">Transaction details</div>
-                <div class="card-subtitle" id="txDetailLabel">—</div>
+                <div class="card-title">Transaction detail</div>
+                <div class="card-subtitle" id="txDetailLabel">Select a transaction</div>
               </div>
-              <span class="chip" id="txDetailType">—</span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Type</span>
+              <span class="summary-val" id="txDetailType">—</span>
             </div>
             <div class="summary-row">
               <span class="summary-label">Amount</span>
-              <span class="summary-val" id="txDetailAmount">£0.00</span>
+              <span class="summary-val" id="txDetailAmount">—</span>
             </div>
             <div class="summary-row">
               <span class="summary-label">Date &amp; time</span>
@@ -754,17 +866,10 @@
               <span class="summary-label">Reference</span>
               <span class="summary-val" id="txDetailRef">—</span>
             </div>
-            <div class="summary-row" id="txDetailCounterpartyRow">
-              <span class="summary-label">Counterparty</span>
-              <span class="summary-val" id="txDetailCounterparty">—</span>
-            </div>
-            <div class="summary-row" id="txDetailAccountRow">
-              <span class="summary-label">Account details</span>
-              <span class="summary-val" id="txDetailAccount">—</span>
-            </div>
 
-            <p class="hint hidden" id="txDetailDelayNote">
-              For bank transfers, it can take up to <strong>4 hours</strong> for the money to fully arrive in the recipient’s account.
+            <!-- 4-hour note shown AFTER you click a transaction -->
+            <p class="hint hidden" id="txDetailNote">
+              Note: Transfers can take up to <strong>4 hours</strong> to fully complete after you send them.
             </p>
           </div>
         </section>
@@ -774,74 +879,76 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">Send &amp; pay</div>
-                <div class="card-subtitle">Move money using recipients</div>
+                <div class="card-title">New payment</div>
+                <div class="card-subtitle">Send a bank transfer</div>
               </div>
             </div>
 
-            <div class="form-row">
-              <label>
-                Saved recipient
-                <select id="payRecipientSelect"></select>
-              </label>
-            </div>
-            <div class="form-row">
-              <label>
-                New recipient name
-                <input type="text" id="newRecName" placeholder="e.g. Jamie Doe" />
-              </label>
-            </div>
-            <div class="form-row">
-              <label>
-                Sort code
-                <input type="text" id="newRecSortCode" placeholder="12-34-56" />
-              </label>
-              <label>
-                Account number
-                <input type="text" id="newRecAccountNumber" placeholder="12345678" />
-              </label>
-            </div>
             <div class="form-row">
               <label>
                 Amount
-                <input type="number" id="payAmount" min="0" step="0.01" placeholder="e.g. 25.00" />
+                <input
+                  id="payAmount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                />
               </label>
-            </div>
-            <div class="form-row">
               <label>
                 Reference
-                <input type="text" id="payRef" placeholder="e.g. Dinner, Rent" />
+                <input
+                  id="payRef"
+                  type="text"
+                  placeholder="Invoice 0123"
+                />
               </label>
             </div>
+
             <div class="form-row">
-              <label style="flex-direction:row; align-items:center; gap:6px;">
-                <input type="checkbox" id="saveNewRecipient" style="width:auto;" />
-                <span>Save new recipient</span>
+              <label>
+                Recipient name
+                <input
+                  id="payName"
+                  type="text"
+                  placeholder="Acme Supplies Ltd"
+                />
               </label>
             </div>
+
+            <div class="form-row">
+              <label>
+                Sort code
+                <input
+                  id="paySortCode"
+                  type="text"
+                  maxlength="8"
+                  placeholder="04-00-75"
+                />
+              </label>
+              <label>
+                Account no.
+                <input
+                  id="payAccount"
+                  type="text"
+                  maxlength="10"
+                  placeholder="57891568"
+                />
+              </label>
+            </div>
+
             <div class="btn-row-2">
-              <button class="btn btn--primary" id="btnSendNow">
+              <button class="btn btn--primary" id="btnSendPayment">
                 <span class="btn-icon">🚀</span>Send now
               </button>
-              <button class="btn btn--ghost" id="btnSchedule">
-                <span class="btn-icon">⏰</span>Schedule
+              <button class="btn btn--ghost" id="btnClearPayment">
+                <span class="btn-icon">🧹</span>Clear
               </button>
             </div>
-            <p class="hint">
-              Transfers in this can take up to
-              <strong>4 hours</strong>, like a real bank message.
-            </p>
-          </div>
 
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Scheduled payments</div>
-                <div class="card-subtitle">Purely simulated, stored in your browser</div>
-              </div>
-            </div>
-            <div class="tx-list" id="scheduledList"></div>
-            <div class="empty" id="scheduledEmpty">No scheduled payments yet.</div>
+            <p class="hint">
+              Payments in this demo are instant and just update the fake feed.
+            </p>
           </div>
         </section>
 
@@ -850,40 +957,24 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">Pots</div>
-                <div class="card-subtitle">Separate money into spaces</div>
+                <div class="card-title">Savings pots</div>
+                <div class="card-subtitle">Ring-fence money for goals</div>
               </div>
             </div>
-            <div class="pots-list" id="potsList"></div>
-            <div class="empty" id="potsEmpty">No pots yet. Create your first savings pot.</div>
-          </div>
 
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">New pot</div>
-                <div class="card-subtitle">Create a savings pot</div>
-              </div>
-            </div>
-            <div class="form-row">
-              <label>
-                Pot name
-                <input type="text" id="newPotName" placeholder="e.g. Holiday, New phone" />
-              </label>
-            </div>
-            <div class="form-row">
-              <label>
-                Goal (£)
-                <input type="number" id="newPotGoal" min="0" step="0.01" placeholder="e.g. 300" />
-              </label>
-            </div>
+            <div id="potsList" class="pots-list"></div>
+
             <div class="btn-row-2">
               <button class="btn btn--primary" id="btnCreatePot">
                 <span class="btn-icon">✨</span>Create pot
               </button>
+              <button class="btn" id="btnResetPots">
+                <span class="btn-icon">🔁</span>Reset pots
+              </button>
             </div>
+
             <p class="hint">
-              To move money into a pot, tap the pot in the list above.
+              Tap a pot to move money in or out of it from your main account.
             </p>
           </div>
         </section>
@@ -897,6 +988,7 @@
                 <div class="card-subtitle">Simple budgeting view</div>
               </div>
             </div>
+
             <div class="summary-row">
               <span class="summary-label">Total spent</span>
               <span class="summary-val" id="insightsTotalSpent">£0.00</span>
@@ -909,17 +1001,8 @@
               <span class="summary-label">Net</span>
               <span class="summary-val" id="insightsNet">£0.00</span>
             </div>
-          </div>
 
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">By category</div>
-                <div class="card-subtitle">From your transaction history</div>
-              </div>
-            </div>
-            <div class="category-list" id="categoryList"></div>
-            <div class="empty" id="categoryEmpty">Not enough data yet. Make a few payments.</div>
+            <div class="category-list" id="insightsCategories"></div>
           </div>
         </section>
 
@@ -928,40 +1011,46 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">Profile</div>
-                <div class="card-subtitle">Choose a user</div>
-              </div>
-            </div>
-            <div class="form-row">
-              <label>
-                User
-                <select id="userSelect"></select>
-              </label>
-            </div>
-            <p class="hint">All data is stored in memory while the page is open.</p>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
                 <div class="card-title">Card &amp; security</div>
-                <div class="card-subtitle">Toy controls only, no real card</div>
+                <div class="card-subtitle">Manage your controls</div>
               </div>
             </div>
+
             <div class="switch-row">
-              <span class="switch-label">Freeze card</span>
+              <div class="switch-label">
+                Freeze physical card
+              </div>
               <div class="switch" id="cardFreezeSwitch">
                 <div class="switch-knob"></div>
               </div>
             </div>
+
+            <div class="switch-row">
+              <div class="switch-label">
+                Online payments
+              </div>
+              <div class="switch" id="onlineSwitch">
+                <div class="switch-knob"></div>
+              </div>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-label">
+                ATM withdrawals
+              </div>
+              <div class="switch" id="atmSwitch">
+                <div class="switch-knob"></div>
+              </div>
+            </div>
+
             <p class="hint">
-              When the card is frozen, we’ll just show it as frozen in the UI — it doesn’t block anything for real.
+              These switches are just visual in the demo, but behave like the real app.
             </p>
           </div>
         </section>
       </main>
 
-      <!-- Bottom tab bar (fixed) -->
+      <!-- TAB BAR -->
       <div class="tabbar-wrapper">
         <nav class="tabbar">
           <button class="tab-btn active" data-screen="home">
@@ -969,11 +1058,11 @@
             Home
           </button>
           <button class="tab-btn" data-screen="payments">
-            <span>💸</span>
+            <span>📤</span>
             Pay
           </button>
           <button class="tab-btn" data-screen="pots">
-            <span>🪣</span>
+            <span>💰</span>
             Pots
           </button>
           <button class="tab-btn" data-screen="insights">
@@ -990,6 +1079,8 @@
   </div>
 
   <script>
+    // --- Basic helpers ---
+
     function formatMoney(v) {
       return v.toLocaleString("en-GB", {
         minimumFractionDigits: 2,
@@ -1006,128 +1097,61 @@
       return "tx_" + Math.random().toString(36).slice(2, 10);
     }
 
-    // --- users & data model ---
+    // --- Demo data ---
 
-    const users = {
-      "1": {
-        id: "1",
-        name: "Alex Johnson",
-        accountName: "Everyday Spending",
-        type: "Current account",
-        ibanLast4: "0924",
-        balance: 3267.55,
-        cardFrozen: false,
-        pots: [
-          { id: "p1", name: "Holiday", goal: 500, balance: 120 },
-          { id: "p2", name: "New phone", goal: 800, balance: 60 }
-        ],
-        recipients: [
-          { id: "r1", name: "Taylor Smith", sortCode: "04-00-04", accountNumber: "12345678", linkedUserId: "2" },
-          { id: "r2", name: "Jordan Lee", sortCode: "10-15-20", accountNumber: "87654321", linkedUserId: "3" }
-        ],
-        transactions: [
-          {
-            id: "u1_tx1",
-            type: "deposit",
-            label: "Salary • ACME Ltd",
-            amount: 1500,
-            time: "09:14",
-            category: "Income",
-            reference: "ACME-SALARY",
-            counterparty: "ACME Ltd"
-          },
-          {
-            id: "u1_tx2",
-            type: "withdraw",
-            label: "Groceries",
-            amount: -68.91,
-            time: "12:43",
-            category: "Groceries",
-            reference: "Tesco"
-          },
-          {
-            id: "u1_tx3",
-            type: "withdraw",
-            label: "Coffee shop",
-            amount: -3.6,
-            time: "13:12",
-            category: "Eating out",
-            reference: "Costa"
-          }
-        ],
-        scheduled: []
-      },
-      "2": {
-        id: "2",
-        name: "Taylor Smith",
-        accountName: "MyBank Everyday",
-        type: "Current account",
-        ibanLast4: "4419",
-        balance: 3734.1,
-        cardFrozen: false,
-        pots: [
-          { id: "p3", name: "Concert tickets", goal: 200, balance: 45 }
-        ],
-        recipients: [
-          { id: "r3", name: "Alex Johnson", sortCode: "04-00-04", accountNumber: "11112222", linkedUserId: "1" }
-        ],
-        transactions: [
-          {
-            id: "u2_tx1",
-            type: "deposit",
-            label: "Gift",
-            amount: 50,
-            time: "10:02",
-            category: "Income",
-            reference: "Birthday gift"
-          },
-          {
-            id: "u2_tx2",
-            type: "withdraw",
-            label: "Music subscription",
-            amount: -9.99,
-            time: "11:05",
-            category: "Entertainment",
-            reference: "Spotify"
-          }
-        ],
-        scheduled: []
-      },
-      "3": {
-        id: "3",
-        name: "Jordan Lee",
-        accountName: "Student Flex",
-        type: "Student account",
-        ibanLast4: "7742",
-        balance: 76.32,
-        cardFrozen: false,
-        pots: [],
-        recipients: [],
-        transactions: [
-          {
-            id: "u3_tx1",
-            type: "deposit",
-            label: "Student loan",
-            amount: 500,
-            time: "08:45",
-            category: "Income",
-            reference: "Student finance"
-          },
-          {
-            id: "u3_tx2",
-            type: "withdraw",
-            label: "Takeaway",
-            amount: -18.5,
-            time: "19:22",
-            category: "Eating out",
-            reference: "JustEat"
-          }
-        ],
-        scheduled: []
-      }
+    const user = {
+      name: "Alex Ventures Ltd",
+      accountName: "MetroBank • Main business account",
+      iban: "GB12 MBNA 0400 7512 3456 78",
+      sortCode: "04-00-75",
+      accountNumber: "57895687",
+      balance: 12345.67,
+      transactions: [
+        {
+          id: newTxId(),
+          type: "deposit",
+          label: "Client payment",
+          amount: 2500,
+          time: "08:14",
+          category: "Income",
+          reference: "Invoice 0142"
+        },
+        {
+          id: newTxId(),
+          type: "withdraw",
+          label: "SaaS subscription",
+          amount: -49,
+          time: "09:30",
+          category: "Software",
+          reference: "Notion"
+        },
+        {
+          id: newTxId(),
+          type: "withdraw",
+          label: "Coffee with client",
+          amount: -12.5,
+          time: "10:05",
+          category: "Entertainment",
+          reference: "Client meeting"
+        },
+        {
+          id: newTxId(),
+          type: "withdraw",
+          label: "Coworking space",
+          amount: -180,
+          time: "Yesterday",
+          category: "Workspace",
+          reference: "Hotdesk"
+        }
+      ],
+      pots: [
+        { id: "pot1", name: "Tax", goal: 10000, balance: 3100 },
+        { id: "pot2", name: "Team offsite", goal: 3000, balance: 750 },
+        { id: "pot3", name: "Emergency buffer", goal: 5000, balance: 1200 }
+      ],
+      cardFrozen: false
     };
 
-    let currentUser = users["1"];
     let selectedTxId = null;
 
     // --- DOM refs ---
@@ -1152,89 +1176,117 @@
     const homeTxEmpty = document.getElementById("homeTxEmpty");
     const feedChip = document.getElementById("feedChip");
 
-    const btnQuickDeposit = document.getElementById("btnQuickDeposit");
-    const btnQuickWithdraw = document.getElementById("btnQuickWithdraw");
-    const btnQuickTransfer = document.getElementById("btnQuickTransfer");
-
-    const txDetailCard = document.getElementById("txDetailCard");
     const txDetailLabel = document.getElementById("txDetailLabel");
     const txDetailType = document.getElementById("txDetailType");
     const txDetailAmount = document.getElementById("txDetailAmount");
     const txDetailTime = document.getElementById("txDetailTime");
     const txDetailCategory = document.getElementById("txDetailCategory");
     const txDetailRef = document.getElementById("txDetailRef");
-    const txDetailCounterpartyRow = document.getElementById("txDetailCounterpartyRow");
-    const txDetailCounterparty = document.getElementById("txDetailCounterparty");
-    const txDetailAccountRow = document.getElementById("txDetailAccountRow");
-    const txDetailAccount = document.getElementById("txDetailAccount");
-    const txDetailDelayNote = document.getElementById("txDetailDelayNote");
+    const txDetailNote = document.getElementById("txDetailNote");
 
-    const payRecipientSelect = document.getElementById("payRecipientSelect");
-    const newRecName = document.getElementById("newRecName");
-    const newRecSortCode = document.getElementById("newRecSortCode");
-    const newRecAccountNumber = document.getElementById("newRecAccountNumber");
     const payAmount = document.getElementById("payAmount");
     const payRef = document.getElementById("payRef");
-    const saveNewRecipient = document.getElementById("saveNewRecipient");
-    const btnSendNow = document.getElementById("btnSendNow");
-    const btnSchedule = document.getElementById("btnSchedule");
-    const scheduledList = document.getElementById("scheduledList");
-    const scheduledEmpty = document.getElementById("scheduledEmpty");
+    const payName = document.getElementById("payName");
+    const paySortCode = document.getElementById("paySortCode");
+    const payAccount = document.getElementById("payAccount");
 
     const potsList = document.getElementById("potsList");
-    const potsEmpty = document.getElementById("potsEmpty");
-    const newPotName = document.getElementById("newPotName");
-    const newPotGoal = document.getElementById("newPotGoal");
-    const btnCreatePot = document.getElementById("btnCreatePot");
 
     const insightsTotalSpent = document.getElementById("insightsTotalSpent");
     const insightsTotalIn = document.getElementById("insightsTotalIn");
     const insightsNet = document.getElementById("insightsNet");
-    const categoryList = document.getElementById("categoryList");
-    const categoryEmpty = document.getElementById("categoryEmpty");
+    const insightsCategories = document.getElementById("insightsCategories");
 
-    const userSelect = document.getElementById("userSelect");
     const cardFreezeSwitch = document.getElementById("cardFreezeSwitch");
+    const onlineSwitch = document.getElementById("onlineSwitch");
+    const atmSwitch = document.getElementById("atmSwitch");
 
-    // --- render helpers ---
+    // --- Rendering functions ---
 
-    function updateUpdatedLabel() {
+    function renderHeader() {
+      userNamePill.textContent = user.name;
+      homeAccountName.textContent = user.accountName;
+      homeIban.textContent = user.iban;
+      homeType.textContent =
+        "Sort code " + user.sortCode + " • " + user.accountNumber;
       homeUpdated.textContent = "Updated " + nowTime();
-    }
-
-    function renderUserBasics() {
-      const u = currentUser;
-      userNamePill.textContent = u.name;
-      homeAccountName.textContent = u.accountName;
-      homeType.textContent = u.type;
-      homeIban.textContent = "•••• " + u.ibanLast4;
-      homeBalance.textContent = formatMoney(u.balance);
-      cardStatusChip.textContent = u.cardFrozen ? "Card frozen" : "Card active";
-      cardStatusChip.classList.toggle("chip--soft", !u.cardFrozen);
-      updateUpdatedLabel();
+      homeBalance.textContent = formatMoney(user.balance);
     }
 
     function prettyTxType(tx) {
-      if (tx.type === "deposit") return "Deposit";
-      if (tx.type === "withdraw") return "Card payment";
-      if (tx.type === "transfer-out") return "Transfer (sent)";
-      if (tx.type === "transfer-in") return "Transfer (received)";
-      return "Payment";
+      if (tx.amount > 0) return "Money in";
+      if (tx.amount < 0) return "Money out";
+      return "Adjustment";
     }
 
-    function findTxById(id) {
-      return currentUser.transactions.find(t => t.id === id) || null;
-    }
+    function renderTransactions() {
+      const txs = user.transactions.slice().reverse(); // newest first
+      homeTxList.innerHTML = "";
 
-    function showTxDetails(tx) {
-      if (!tx) {
-        txDetailCard.classList.add("hidden");
-        txDetailDelayNote.classList.add("hidden");
-        selectedTxId = null;
+      if (!txs.length) {
+        homeTxEmpty.classList.remove("hidden");
         return;
       }
 
-      selectedTxId = tx.id;
+      homeTxEmpty.classList.add("hidden");
+
+      txs.forEach((tx) => {
+        const item = document.createElement("div");
+        item.className = "tx-item";
+        item.dataset.txId = tx.id;
+
+        const main = document.createElement("div");
+        main.className = "tx-main";
+
+        const label = document.createElement("div");
+        label.className = "tx-label";
+        label.textContent = tx.label || "Transaction";
+
+        const meta = document.createElement("div");
+        meta.className = "tx-meta";
+        meta.textContent = tx.time || "Today";
+
+        main.appendChild(label);
+        main.appendChild(meta);
+
+        const amt = document.createElement("div");
+        amt.className =
+          "tx-amount " + (tx.amount >= 0 ? "tx-amount--pos" : "tx-amount--neg");
+        const prefix = tx.amount >= 0 ? "+£" : "−£";
+        amt.textContent = prefix + formatMoney(Math.abs(tx.amount));
+
+        item.appendChild(main);
+        item.appendChild(amt);
+
+        item.addEventListener("click", () => {
+          selectedTxId = tx.id;
+          renderTxDetail();
+        });
+
+        homeTxList.appendChild(item);
+      });
+
+      feedChip.textContent = "Feed • " + txs.length + " items";
+    }
+
+    function renderTxDetail() {
+      if (!selectedTxId) {
+        txDetailLabel.textContent = "Select a transaction";
+        txDetailType.textContent = "—";
+        txDetailAmount.textContent = "—";
+        txDetailTime.textContent = "—";
+        txDetailCategory.textContent = "—";
+        txDetailRef.textContent = "—";
+        txDetailNote.classList.add("hidden");
+        return;
+      }
+
+      const tx = user.transactions.find((t) => t.id === selectedTxId);
+      if (!tx) {
+        selectedTxId = null;
+        renderTxDetail();
+        return;
+      }
 
       txDetailLabel.textContent = tx.label || "Transaction";
       txDetailType.textContent = prettyTxType(tx);
@@ -1247,519 +1299,322 @@
       txDetailCategory.textContent = tx.category || "Uncategorised";
       txDetailRef.textContent = tx.reference || "—";
 
-      if (tx.counterparty) {
-        txDetailCounterpartyRow.style.display = "flex";
-        txDetailCounterparty.textContent = tx.counterparty;
-      } else {
-        txDetailCounterpartyRow.style.display = "none";
-      }
-
-      if (tx.sortCode || tx.accountNumber) {
-        txDetailAccountRow.style.display = "flex";
-        const bits = [];
-        if (tx.sortCode) bits.push("Sort code " + tx.sortCode);
-        if (tx.accountNumber) bits.push("Account " + tx.accountNumber);
-        txDetailAccount.textContent = bits.join(" • ");
-      } else {
-        txDetailAccountRow.style.display = "none";
-      }
-
-      const isTransfer = tx.type === "transfer-out" || tx.type === "transfer-in";
-      txDetailDelayNote.classList.toggle("hidden", !isTransfer);
-
-      txDetailCard.classList.remove("hidden");
-    }
-
-    function renderTransactions() {
-      const txs = currentUser.transactions;
-      homeTxList.innerHTML = "";
-      if (!txs.length) {
-        homeTxEmpty.classList.remove("hidden");
-      } else {
-        homeTxEmpty.classList.add("hidden");
-        txs.slice().reverse().forEach(tx => {
-          const row = document.createElement("div");
-          row.className = "tx-item";
-          row.dataset.txId = tx.id;
-
-          const main = document.createElement("div");
-          main.className = "tx-main";
-
-          const label = document.createElement("div");
-          label.className = "tx-label";
-          label.textContent = tx.label;
-
-          const meta = document.createElement("div");
-          meta.className = "tx-meta";
-          meta.textContent = `${prettyTxType(tx)} • ${tx.time || nowTime()}`;
-
-          main.appendChild(label);
-          main.appendChild(meta);
-
-          const amt = document.createElement("div");
-          amt.className =
-            "tx-amount " + (tx.amount >= 0 ? "tx-amount--pos" : "tx-amount--neg");
-          const sign = tx.amount >= 0 ? "+" : "−";
-          amt.textContent = sign + "£" + formatMoney(Math.abs(tx.amount));
-
-          row.appendChild(main);
-          row.appendChild(amt);
-
-          row.addEventListener("click", () => {
-            const fullTx = findTxById(tx.id);
-            showTxDetails(fullTx);
-          });
-
-          homeTxList.appendChild(row);
-        });
-      }
-      feedChip.textContent =
-        txs.length + " transaction" + (txs.length === 1 ? "" : "s");
-    }
-
-    function renderRecipients() {
-      payRecipientSelect.innerHTML = "";
-      const placeholder = document.createElement("option");
-      placeholder.value = "";
-      placeholder.textContent = "Choose saved recipient…";
-      payRecipientSelect.appendChild(placeholder);
-
-      currentUser.recipients.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r.id;
-        opt.textContent = `${r.name} • ${r.sortCode} • ${r.accountNumber}`;
-        payRecipientSelect.appendChild(opt);
-      });
-    }
-
-    function renderScheduled() {
-      const sch = currentUser.scheduled;
-      scheduledList.innerHTML = "";
-      if (!sch.length) {
-        scheduledEmpty.classList.remove("hidden");
-      } else {
-        scheduledEmpty.classList.add("hidden");
-        sch.slice().reverse().forEach(s => {
-          const row = document.createElement("div");
-          row.className = "tx-item";
-
-          const main = document.createElement("div");
-          main.className = "tx-main";
-
-          const label = document.createElement("div");
-          label.className = "tx-label";
-          label.textContent = `To ${s.toName}`;
-
-          const meta = document.createElement("div");
-          meta.className = "tx-meta";
-          const detailsParts = [
-            `£${formatMoney(s.amount)}`,
-            `"${s.ref || "Scheduled payment"}"`,
-            `on ${s.date}`
-          ];
-          if (s.sortCode || s.accountNumber) {
-            const bits = [];
-            if (s.sortCode) bits.push("SC " + s.sortCode);
-            if (s.accountNumber) bits.push("Acc " + s.accountNumber);
-            detailsParts.push(bits.join(" • "));
-          }
-          meta.textContent = detailsParts.join(" • ");
-
-          main.appendChild(label);
-          main.appendChild(meta);
-
-          const status = document.createElement("div");
-          status.className = "tx-amount";
-          status.textContent = "⏰";
-
-          row.appendChild(main);
-          row.appendChild(status);
-          scheduledList.appendChild(row);
-        });
-      }
+      // Show 4-hour note after a transaction is clicked
+      txDetailNote.classList.remove("hidden");
     }
 
     function renderPots() {
-      const pots = currentUser.pots;
       potsList.innerHTML = "";
-      if (!pots.length) {
-        potsEmpty.classList.remove("hidden");
-      } else {
-        potsEmpty.classList.add("hidden");
-        pots.forEach(p => {
-          const card = document.createElement("div");
-          card.className = "pot-card";
 
-          const left = document.createElement("div");
-          const nameEl = document.createElement("div");
-          nameEl.className = "pot-name";
-          nameEl.textContent = p.name;
-          const metaEl = document.createElement("div");
-          metaEl.className = "pot-meta";
-          const goalText = p.goal ? `Goal £${formatMoney(p.goal)}` : "No goal set";
-          metaEl.textContent = `${goalText}`;
-          left.appendChild(nameEl);
-          left.appendChild(metaEl);
+      if (!user.pots.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No pots yet. Create one below.";
+        potsList.appendChild(empty);
+        return;
+      }
 
-          const right = document.createElement("div");
-          right.className = "pot-amount";
-          right.textContent = "£" + formatMoney(p.balance);
+      user.pots.forEach((p) => {
+        const card = document.createElement("div");
+        card.className = "pot-card";
 
-          card.appendChild(left);
-          card.appendChild(right);
+        const left = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "pot-name";
+        name.textContent = p.name;
 
-          card.addEventListener("click", () => {
-            const raw = prompt(
-              `Move money in/out of "${p.name}".\n\nEnter a positive amount to move INTO the pot, negative to move OUT:`
-            );
-            if (raw === null) return;
-            const amt = parseFloat(raw);
-            if (isNaN(amt) || amt === 0) {
-              alert("Enter a non-zero number.");
+        const meta = document.createElement("div");
+        meta.className = "pot-meta";
+        meta.textContent =
+          "Goal £" + formatMoney(p.goal) + " • " + Math.round((p.balance / p.goal) * 100) + "%";
+
+        left.appendChild(name);
+        left.appendChild(meta);
+
+        const right = document.createElement("div");
+        right.className = "pot-amount";
+        right.textContent = "£" + formatMoney(p.balance);
+
+        card.appendChild(left);
+        card.appendChild(right);
+
+        card.addEventListener("click", () => {
+          const raw = prompt(
+            `Move money in/out of "${p.name}".\n\nEnter a positive amount to move INTO the pot, negative to move OUT:`
+          );
+          if (raw === null) return;
+          const amt = parseFloat(raw);
+          if (isNaN(amt) || amt === 0) {
+            alert("Enter a non-zero number.");
+            return;
+          }
+          if (amt > 0) {
+            if (amt > user.balance) {
+              alert("Not enough money in your main account for this move.");
               return;
             }
-            if (amt > 0) {
-              if (amt > currentUser.balance) {
-                alert("Not enough money in your main account for this move.");
-                return;
-              }
-              currentUser.balance -= amt;
-              p.balance += amt;
-              currentUser.transactions.push({
-                id: newTxId(),
-                type: "withdraw",
-                label: `Move to pot • ${p.name}`,
-                amount: -amt,
-                time: nowTime(),
-                category: "Saving",
-                reference: `To pot ${p.name}`
-              });
-            } else {
-              const out = Math.abs(amt);
-              if (out > p.balance) {
-                alert("Not enough money in the pot for this move.");
-                return;
-              }
-              p.balance -= out;
-              currentUser.balance += out;
-              currentUser.transactions.push({
-                id: newTxId(),
-                type: "deposit",
-                label: `Move from pot • ${p.name}`,
-                amount: out,
-                time: nowTime(),
-                category: "Saving",
-                reference: `From pot ${p.name}`
-              });
+            user.balance -= amt;
+            p.balance += amt;
+            user.transactions.push({
+              id: newTxId(),
+              type: "withdraw",
+              label: `Move to pot • ${p.name}`,
+              amount: -amt,
+              time: nowTime(),
+              category: "Saving",
+              reference: `To pot ${p.name}`
+            });
+          } else {
+            const positive = Math.abs(amt);
+            if (positive > p.balance) {
+              alert("Not enough in the pot for this move.");
+              return;
             }
-            renderAll();
-          });
+            p.balance -= positive;
+            user.balance += positive;
+            user.transactions.push({
+              id: newTxId(),
+              type: "deposit",
+              label: `Move from pot • ${p.name}`,
+              amount: positive,
+              time: nowTime(),
+              category: "Saving",
+              reference: `From pot ${p.name}`
+            });
+          }
 
-          potsList.appendChild(card);
+          renderAll();
         });
-      }
+
+        potsList.appendChild(card);
+      });
     }
 
     function renderInsights() {
-      const txs = currentUser.transactions;
+      const txs = user.transactions;
+
       let totalIn = 0;
       let totalOut = 0;
-      const byCat = {};
+      const byCategory = {};
 
-      txs.forEach(tx => {
+      txs.forEach((tx) => {
         if (tx.amount > 0) {
           totalIn += tx.amount;
-        } else {
-          totalOut += Math.abs(tx.amount);
+        } else if (tx.amount < 0) {
+          totalOut += -tx.amount;
         }
+
         const cat = tx.category || "Other";
-        if (!byCat[cat]) byCat[cat] = 0;
-        if (tx.amount < 0) byCat[cat] += Math.abs(tx.amount);
+        if (!byCategory[cat]) byCategory[cat] = 0;
+        byCategory[cat] += Math.abs(tx.amount);
       });
 
       insightsTotalIn.textContent = "£" + formatMoney(totalIn);
       insightsTotalSpent.textContent = "£" + formatMoney(totalOut);
       insightsNet.textContent = "£" + formatMoney(totalIn - totalOut);
 
-      categoryList.innerHTML = "";
-      const entries = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
-
-      if (!entries.length) {
-        categoryEmpty.classList.remove("hidden");
-      } else {
-        categoryEmpty.classList.add("hidden");
-        entries.forEach(([name, amount]) => {
+      insightsCategories.innerHTML = "";
+      Object.keys(byCategory)
+        .sort((a, b) => byCategory[b] - byCategory[a])
+        .forEach((cat) => {
           const row = document.createElement("div");
           row.className = "cat-item";
+
           const left = document.createElement("span");
-          left.textContent = name;
+          left.textContent = cat;
+
           const right = document.createElement("span");
-          right.textContent = "£" + formatMoney(amount);
+          right.textContent = "£" + formatMoney(byCategory[cat]);
+
           row.appendChild(left);
           row.appendChild(right);
-          categoryList.appendChild(row);
+          insightsCategories.appendChild(row);
         });
-      }
-    }
 
-    function renderUserSelect() {
-      userSelect.innerHTML = "";
-      Object.values(users).forEach(u => {
-        const opt = document.createElement("option");
-        opt.value = u.id;
-        opt.textContent = u.name;
-        if (u.id === currentUser.id) opt.selected = true;
-        userSelect.appendChild(opt);
-      });
+      if (!Object.keys(byCategory).length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No spending yet this month.";
+        insightsCategories.appendChild(empty);
+      }
     }
 
     function renderCardSwitch() {
-      if (currentUser.cardFrozen) {
+      if (user.cardFrozen) {
         cardFreezeSwitch.classList.add("on");
+        cardStatusChip.textContent = "Card frozen";
       } else {
         cardFreezeSwitch.classList.remove("on");
+        cardStatusChip.textContent = "Card active";
       }
-      cardStatusChip.textContent = currentUser.cardFrozen ? "Card frozen" : "Card active";
     }
 
     function renderAll() {
-      renderUserBasics();
+      renderHeader();
       renderTransactions();
-      renderRecipients();
-      renderScheduled();
+      renderTxDetail();
       renderPots();
       renderInsights();
-      renderUserSelect();
       renderCardSwitch();
-      showTxDetails(null);
     }
 
-    // --- tab navigation ---
+    // --- Screen & tab logic ---
 
-    document.querySelectorAll(".tab-btn").forEach(btn => {
+    const tabButtons = document.querySelectorAll(".tab-btn");
+
+    function showScreen(name) {
+      Object.keys(screens).forEach((key) => {
+        if (key === name) {
+          screens[key].classList.add("active");
+        } else {
+          screens[key].classList.remove("active");
+        }
+      });
+
+      tabButtons.forEach((btn) => {
+        if (btn.dataset.screen === name) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    tabButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        const screen = btn.getAttribute("data-screen");
-        document.querySelectorAll(".tab-btn").forEach(b =>
-          b.classList.toggle("active", b === btn)
-        );
-        Object.keys(screens).forEach(key => {
-          screens[key].classList.toggle("active", key === screen);
-        });
+        const screen = btn.dataset.screen;
+        showScreen(screen);
       });
     });
 
-    // --- quick actions (home) ---
+    // --- Payments ---
 
-    btnQuickDeposit.addEventListener("click", () => {
-      const raw = prompt("Deposit amount (£):");
-      if (raw === null) return;
-      const amt = parseFloat(raw);
-      if (isNaN(amt) || amt <= 0) {
+    function clearPaymentForm() {
+      payAmount.value = "";
+      payRef.value = "";
+      payName.value = "";
+      paySortCode.value = "";
+      payAccount.value = "";
+    }
+
+    document.getElementById("btnClearPayment").addEventListener("click", () => {
+      clearPaymentForm();
+    });
+
+    document.getElementById("btnSendPayment").addEventListener("click", () => {
+      const amount = parseFloat(payAmount.value);
+      const ref = payRef.value.trim() || "Payment";
+      const name = payName.value.trim() || "Recipient";
+      const sortCode = paySortCode.value.trim() || "N/A";
+      const account = payAccount.value.trim() || "N/A";
+
+      if (!amount || amount <= 0) {
         alert("Enter an amount greater than 0.");
         return;
       }
-      currentUser.balance += amt;
-      currentUser.transactions.push({
+
+      if (amount > user.balance) {
+        alert("Not enough balance in your account.");
+        return;
+      }
+
+      user.balance -= amount;
+      user.transactions.push({
+        id: newTxId(),
+        type: "withdraw",
+        label: `Bank transfer • ${name}`,
+        amount: -amount,
+        time: nowTime(),
+        category: "Transfer",
+        reference: `${ref} (${sortCode} • ${account})`
+      });
+
+      renderAll();
+      clearPaymentForm();
+      alert("Payment sent in the demo.");
+      showScreen("home");
+    });
+
+    // buttons on hero card jump to screens
+    document.getElementById("btnAddPayment").addEventListener("click", () => {
+      showScreen("payments");
+    });
+
+    document.getElementById("btnAddIncome").addEventListener("click", () => {
+      const raw = prompt("How much money are you receiving?");
+      if (raw === null) return;
+      const amt = parseFloat(raw);
+      if (!amt || amt <= 0) {
+        alert("Enter an amount greater than 0.");
+        return;
+      }
+      const ref = prompt("Reference for this money in?") || "Income";
+      user.balance += amt;
+      user.transactions.push({
         id: newTxId(),
         type: "deposit",
-        label: "Deposit",
+        label: ref,
         amount: amt,
         time: nowTime(),
         category: "Income",
-        reference: "Manual deposit"
+        reference: ref
       });
       renderAll();
+      showScreen("home");
     });
 
-    btnQuickWithdraw.addEventListener("click", () => {
-      const raw = prompt("Payment amount (£):");
-      if (raw === null) return;
-      const amt = parseFloat(raw);
-      if (isNaN(amt) || amt <= 0) {
-        alert("Enter an amount greater than 0.");
-        return;
+    document.getElementById("btnQuickPot").addEventListener("click", () => {
+      showScreen("pots");
+      alert("Tap a pot to move money between your account and the pot.");
+    });
+
+    // --- Pots actions ---
+
+    document.getElementById("btnCreatePot").addEventListener("click", () => {
+      const name = prompt("Name of the new pot?");
+      if (!name) return;
+      const goalRaw = prompt("Goal amount for this pot? (optional)");
+      let goal = 1000;
+      if (goalRaw) {
+        const parsed = parseFloat(goalRaw);
+        if (!isNaN(parsed) && parsed > 0) goal = parsed;
       }
-      if (amt > currentUser.balance) {
-        alert("Not enough balance for this payment.");
-        return;
-      }
-      const label = prompt("What was this for? (e.g. Groceries)") || "Payment";
-      currentUser.balance -= amt;
-      currentUser.transactions.push({
+      user.pots.push({
         id: newTxId(),
-        type: "withdraw",
-        label,
-        amount: -amt,
-        time: nowTime(),
-        category: "General",
-        reference: label
-      });
-      renderAll();
-    });
-
-    btnQuickTransfer.addEventListener("click", () => {
-      document.querySelector('.tab-btn[data-screen="payments"]').click();
-    });
-
-    // --- recipient resolution helper ---
-
-    function resolveRecipientForPayment() {
-      const selectedId = payRecipientSelect.value;
-      const name = newRecName.value.trim();
-      const sortCode = newRecSortCode.value.trim();
-      const accountNumber = newRecAccountNumber.value.trim();
-
-      let recipient = null;
-
-      if (name) {
-        if (!sortCode || !accountNumber) {
-          alert("Enter sort code and account number for the new recipient.");
-          return null;
-        }
-        recipient = {
-          id: "rec_" + Math.random().toString(36).slice(2, 8),
-          name,
-          sortCode,
-          accountNumber,
-          linkedUserId: null
-        };
-
-        if (saveNewRecipient.checked) {
-          currentUser.recipients.push(recipient);
-          renderRecipients();
-        }
-      } else if (selectedId) {
-        recipient = currentUser.recipients.find(r => r.id === selectedId) || null;
-      } else {
-        alert("Select a saved recipient or enter a new one.");
-        return null;
-      }
-
-      return recipient;
-    }
-
-    function clearPaymentForm() {
-      payRecipientSelect.value = "";
-      newRecName.value = "";
-      newRecSortCode.value = "";
-      newRecAccountNumber.value = "";
-      payAmount.value = "";
-      payRef.value = "";
-      saveNewRecipient.checked = false;
-    }
-
-    // --- payments actions ---
-
-    btnSendNow.addEventListener("click", () => {
-      const recipient = resolveRecipientForPayment();
-      if (!recipient) return;
-
-      const amt = parseFloat(payAmount.value);
-      if (isNaN(amt) || amt <= 0) {
-        alert("Enter an amount greater than 0.");
-        return;
-      }
-      if (amt > currentUser.balance) {
-        alert("Not enough balance for this transfer.");
-        return;
-      }
-
-      const ref = payRef.value.trim() || "Transfer";
-
-      currentUser.balance -= amt;
-
-      currentUser.transactions.push({
-        id: newTxId(),
-        type: "transfer-out",
-        label: `Transfer to ${recipient.name}`,
-        amount: -amt,
-        time: nowTime(),
-        category: "Transfer",
-        reference: ref,
-        counterparty: recipient.name,
-        sortCode: recipient.sortCode,
-        accountNumber: recipient.accountNumber
-      });
-
-      if (recipient.linkedUserId && users[recipient.linkedUserId]) {
-        const other = users[recipient.linkedUserId];
-        other.balance += amt;
-        other.transactions.push({
-          id: newTxId(),
-          type: "transfer-in",
-          label: `Transfer from ${currentUser.name}`,
-          amount: amt,
-          time: nowTime(),
-          category: "Transfer",
-          reference: ref,
-          counterparty: currentUser.name
-        });
-      }
-
-      clearPaymentForm();
-      renderAll();
-
-      alert("Your transfer has been submitted. It could take up to 2 hours to arrive.");
-    });
-
-    btnSchedule.addEventListener("click", () => {
-      const recipient = resolveRecipientForPayment();
-      if (!recipient) return;
-
-      const amt = parseFloat(payAmount.value);
-      if (isNaN(amt) || amt <= 0) {
-        alert("Enter an amount greater than 0.");
-        return;
-      }
-      const ref = payRef.value.trim() || "Scheduled payment";
-      const date = prompt("When should this go? (e.g. 28th, 01/12)") || "Future date";
-
-      currentUser.scheduled.push({
-        toId: recipient.id,
-        toName: recipient.name,
-        amount: amt,
-        ref,
-        date,
-        sortCode: recipient.sortCode,
-        accountNumber: recipient.accountNumber
-      });
-
-      clearPaymentForm();
-      renderScheduled();
-      alert("Scheduled payment created. Remember: It can take up to 4 hours.");
-    });
-
-    // --- settings ---
-
-    btnCreatePot.addEventListener("click", () => {
-      const name = newPotName.value.trim();
-      const goal = parseFloat(newPotGoal.value);
-      if (!name) {
-        alert("Give your pot a name.");
-        return;
-      }
-      const id = "p" + Math.random().toString(36).slice(2, 8);
-      currentUser.pots.push({
-        id,
         name,
-        goal: isNaN(goal) || goal <= 0 ? 0 : goal,
+        goal,
         balance: 0
       });
-      newPotName.value = "";
-      newPotGoal.value = "";
       renderPots();
     });
 
-    userSelect.addEventListener("change", () => {
-      const id = userSelect.value;
-      if (!id || !users[id]) return;
-      currentUser = users[id];
-      renderAll();
+    document.getElementById("btnResetPots").addEventListener("click", () => {
+      if (!confirm("Reset pots back to their original state?")) return;
+      user.pots = [
+        { id: "pot1", name: "Tax", goal: 10000, balance: 3100 },
+        { id: "pot2", name: "Team offsite", goal: 3000, balance: 750 },
+        { id: "pot3", name: "Emergency buffer", goal: 5000, balance: 1200 }
+      ];
+      renderPots();
     });
 
+    // --- Settings switches ---
+
+    function toggleSwitch(el) {
+      el.classList.toggle("on");
+    }
+
     cardFreezeSwitch.addEventListener("click", () => {
-      currentUser.cardFrozen = !currentUser.cardFrozen;
+      user.cardFrozen = !user.cardFrozen;
       renderCardSwitch();
+    });
+
+    onlineSwitch.addEventListener("click", () => {
+      toggleSwitch(onlineSwitch);
+    });
+
+    atmSwitch.addEventListener("click", () => {
+      toggleSwitch(atmSwitch);
     });
 
     // --- init ---
@@ -1768,6 +1623,3 @@
   </script>
 </body>
 </html>
-
-
-
